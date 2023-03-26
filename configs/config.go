@@ -1,9 +1,12 @@
 package configs
 
 import (
+	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/rs/zerolog/log"
+	"github.com/samuraivf/mail-sender/internal/app/mail-sender/mail"
 	kafkago "github.com/segmentio/kafka-go"
 	"github.com/spf13/viper"
 )
@@ -17,6 +20,19 @@ func initConfig() error {
 func init() {
 	if err := initConfig(); err != nil {
 		log.Fatal().Timestamp().Err(err).Msg("")
+	}
+
+	if err := godotenv.Load(); err != nil {
+		log.Fatal().Timestamp().Err(err).Msg("")
+	}
+}
+
+func MailSenderConfig() mail.SenderConfig {
+	return mail.SenderConfig{
+		FromEmail:    os.Getenv("MAIL_FROM"),
+		FromAppPassword: os.Getenv("MAIL_FROM_APP_PASSWORD"),
+		SMTPHost:     os.Getenv("SMTP_HOST"),
+		SMTPPort:     os.Getenv("SMTP_PORT"),
 	}
 }
 
