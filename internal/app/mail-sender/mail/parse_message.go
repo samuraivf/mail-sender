@@ -15,6 +15,7 @@ type message struct {
 }
 
 func parseMessage(msg string) (message, error) {
+	// Message: <email>:<link>
 	parts := strings.Split(msg, ":")
 	email := parts[0]
 	link := parts[1]

@@ -4,7 +4,10 @@
 <body>
     <div style="width: 100%;">
         <h1>Verify your email</h1>
-        <a href="{{.Link}}">Verify</a>
+        <form action="{{.Link}}" method="POST">
+            <input name="email" value="{{.Email}}" style="display: none;">
+            <button type="submit">Verify</button>
+        </form>
     </div>
 </body>
 </html>

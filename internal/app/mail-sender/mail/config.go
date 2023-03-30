@@ -1,8 +1,8 @@
 package mail
 
 type SenderConfig struct {
-	FromEmail    string
+	FromEmail       string
 	FromAppPassword string
-	SMTPHost     string
-	SMTPPort     string
+	SMTPHost        string
+	SMTPPort        string
 }

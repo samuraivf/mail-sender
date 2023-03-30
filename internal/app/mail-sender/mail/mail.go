@@ -9,18 +9,18 @@ import (
 )
 
 type Sender struct {
-	fromEmail    string
+	fromEmail       string
 	fromAppPassword string
-	smtpHost     string
-	smtpPort     string
+	smtpHost        string
+	smtpPort        string
 }
 
 func NewSender(config SenderConfig) *Sender {
 	return &Sender{
-		fromEmail:    config.FromEmail,
+		fromEmail:       config.FromEmail,
 		fromAppPassword: config.FromAppPassword,
-		smtpHost:     config.SMTPHost,
-		smtpPort:     config.SMTPPort,
+		smtpHost:        config.SMTPHost,
+		smtpPort:        config.SMTPPort,
 	}
 }
 
@@ -46,14 +46,18 @@ func (s *Sender) Send(msg string) error {
 	mimeHeaders := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	body.Write([]byte(fmt.Sprintf("Subject: Email Verification \n%s\n\n", mimeHeaders)))
 
-	t.Execute(&body, struct{
-		Link string
-	}{Link: os.Getenv("BUG_TRACKER_ADDRESS") + parsedMsg.link})
+	t.Execute(&body, struct {
+		Link  string
+		Email string
+	}{
+		Link:  os.Getenv("BUG_TRACKER_ADDRESS") + parsedMsg.link,
+		Email: parsedMsg.email,
+	})
 
-	err = smtp.SendMail(s.smtpHost + ":" + s.smtpPort, auth, s.fromEmail, []string{parsedMsg.email}, body.Bytes())
+	err = smtp.SendMail(s.smtpHost+":"+s.smtpPort, auth, s.fromEmail, []string{parsedMsg.email}, body.Bytes())
 	if err != nil {
 		return err
 	}
-	
+
 	return nil
 }

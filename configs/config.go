@@ -29,10 +29,10 @@ func init() {
 
 func MailSenderConfig() mail.SenderConfig {
 	return mail.SenderConfig{
-		FromEmail:    os.Getenv("MAIL_FROM"),
+		FromEmail:       os.Getenv("MAIL_FROM"),
 		FromAppPassword: os.Getenv("MAIL_FROM_APP_PASSWORD"),
-		SMTPHost:     os.Getenv("SMTP_HOST"),
-		SMTPPort:     os.Getenv("SMTP_PORT"),
+		SMTPHost:        os.Getenv("SMTP_HOST"),
+		SMTPPort:        os.Getenv("SMTP_PORT"),
 	}
 }
 
