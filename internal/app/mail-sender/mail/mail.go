@@ -2,6 +2,7 @@ package mail
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"html/template"
 	"net/smtp"
@@ -25,9 +26,8 @@ func NewSender(config SenderConfig) *Sender {
 }
 
 func (s *Sender) Send(msg string) error {
-	parsedMsg, err := parseMessage(msg)
-	if err != nil {
-		return err
+	if ok := validateEmail(msg); !ok {
+		return errors.New("error invalid email")
 	}
 
 	auth := smtp.PlainAuth("", s.fromEmail, s.fromAppPassword, s.smtpHost)
@@ -50,11 +50,11 @@ func (s *Sender) Send(msg string) error {
 		Link  string
 		Email string
 	}{
-		Link:  os.Getenv("BUG_TRACKER_ADDRESS") + parsedMsg.link,
-		Email: parsedMsg.email,
+		Link:  os.Getenv("BUG_TRACKER_ADDRESS"),
+		Email: msg,
 	})
 
-	err = smtp.SendMail(s.smtpHost+":"+s.smtpPort, auth, s.fromEmail, []string{parsedMsg.email}, body.Bytes())
+	err = smtp.SendMail(s.smtpHost+":"+s.smtpPort, auth, s.fromEmail, []string{msg}, body.Bytes())
 	if err != nil {
 		return err
 	}
