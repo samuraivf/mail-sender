@@ -1,6 +1,7 @@
 package log
 
 import (
+	"io"
 	"os"
 	"time"
 
@@ -19,9 +20,9 @@ type Logger struct {
 	log *zerolog.Logger
 }
 
-func New() *Logger {
+func New(out io.Writer) *Logger {
 	logger := zerolog.New(os.Stdout).Output(zerolog.ConsoleWriter{
-		Out:        os.Stderr,
+		Out:        out,
 		TimeFormat: time.RFC3339,
 	}).With().Timestamp().Logger()
 
@@ -35,7 +36,7 @@ func (l *Logger) Info(msg string) {
 }
 
 func (l *Logger) Infof(msg string, v ...interface{}) {
-	l.log.Info().Msgf(msg, v)
+	l.log.Info().Msgf(msg, v...)
 }
 
 func (l *Logger) Error(err error) {

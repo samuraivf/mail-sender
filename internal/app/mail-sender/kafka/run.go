@@ -12,7 +12,7 @@ import (
 )
 
 func Run() {
-	logger := log.New()
+	logger := log.New(os.Stderr)
 	reader := NewKafkaReader(configs.KafkaConfig(), logger)
 
 	done := make(chan os.Signal, 1)
